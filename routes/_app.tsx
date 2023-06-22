@@ -9,10 +9,9 @@ export default function App(props: AppProps) {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <title>Goodbye twind!</title>
-        <link rel="icon" type="image/png" href="../images/favicon.ico"/>
+        <title>Fresh App</title>
 
-        {/* HERE IS OUR TAILWINDCSS stylesheet */}
+        <link rel="icon" type="image/png" href="../images/favicon.ico"/>
         <link rel="stylesheet" href="../styles/tailwind.css" />
       </Head>
       <body>
