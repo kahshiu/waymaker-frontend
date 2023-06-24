@@ -1,8 +1,8 @@
 {
   "lock": false,
   "tasks": {
-    "start": "/Users/kahshiu.chong/tailwindcss -i ./static/styles/input.css -o ./static/styles/tailwind.css --minify --watch & deno run -A --watch=static/,routes/ dev.ts",
-    "start2": "deno run -A --watch=static/,routes/ dev.ts",
+    "start2": "/tools/tailwindcss -i ./static/styles/input.css -o ./static/styles/tailwind.css --minify --watch & deno run -A --watch=static/,routes/ dev.ts",
+    "start": "deno run -A --watch=static/,routes/ dev.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "imports": {

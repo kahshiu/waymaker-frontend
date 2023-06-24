@@ -1,0 +1,25 @@
+#!/bin/bash
+
+env="$1"
+dir=$(dirname "$0")
+foldername=$(basename "$PWD")
+iname="$foldername-$env"
+
+# copy Dockerfile from dev to project directory
+if [ "$env" = "dev" ]; then
+    cp ./auto/Dockerfile.dev ./Dockerfile
+    docker build -t $iname .
+    echo "environment: dev"
+    echo "- Dockerfile copied successfully."
+    echo "- Dockerfile built successfully."
+
+elif [ "$env" = "prod" ]; then
+    cp ./auto/Dockerfile.dev ./Dockerfile
+    docker build -t $iname .
+    echo "environment: prod"
+    echo "- Dockerfile copied successfully."
+    echo "- Dockerfile built successfully."
+
+else
+    echo "Invalid environment."
+fi
