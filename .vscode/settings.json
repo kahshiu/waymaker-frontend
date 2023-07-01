@@ -1,6 +1,10 @@
 {
   "deno.enable": true,
   "deno.lint": true,
-  "deno.unstable": false,
-  "editor.defaultFormatter": "denoland.vscode-deno"
+  "deno.unstable": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
