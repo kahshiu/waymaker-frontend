@@ -10,6 +10,7 @@ import { defaultComputedDisabled, defaultComputedError } from "./Defaults.ts";
 export const contextNew = () => {
   return {
     labels: new Map(),
+    descriptions: new Map(),
     data: new Map(),
     dataMasks: new Map(),
     errorResults: new Map(),
@@ -23,6 +24,7 @@ export const contextAddField = (
   fieldConfig: IConfigField
 ) => {
   const fieldLabel = fieldConfig.label;
+  const fieldDescription = fieldConfig.description ?? "";
   const fieldData = signal(fieldConfig.data);
 
   // SECTION2: disabling operation
@@ -71,6 +73,7 @@ export const contextAddField = (
 
   // populate context
   context.labels.set(fieldName, fieldLabel);
+  context.descriptions.set(fieldName, fieldDescription);
   context.data.set(fieldName, fieldData);
   context.errorResults.set(fieldName, fieldError);
   context.disabledResults.set(fieldName, fieldDisabled);
@@ -84,6 +87,7 @@ export const contextGetField = (
   fieldName: string
 ): IResultField => {
   const label = context.labels.get(fieldName) as string;
+  const description = context.descriptions.get(fieldName) as string;
   const data = context.data.get(fieldName) as Signal<any>;
   const dataMask = context.dataMasks.get(fieldName);
   const errorResult = context.errorResults.get(fieldName);
@@ -91,6 +95,7 @@ export const contextGetField = (
 
   return {
     label,
+    description,
     data,
     dataMask: dataMask ?? signal(""),
     errorResult: errorResult ?? computed(() => defaultComputedError),

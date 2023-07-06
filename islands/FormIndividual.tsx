@@ -27,7 +27,10 @@ import {
   errorPhoneNo,
   errorPostcode,
 } from "../components/form/fn/errorsSpecial.ts";
-import { isMandatory, withPrecondition } from "../components/form/fn/validators.ts";
+import {
+  isMandatory,
+  withPrecondition,
+} from "../components/form/fn/validators.ts";
 
 const navListSidebar: INavListItem[] = [
   { href: "", itemText: "asdf" },
@@ -40,12 +43,14 @@ export default function F1(incoming: any) {
   const formContext = contextNew();
 
   contextAddField(formContext, "entityName", {
-    label: "Person Name",
+    label: "Name",
+    description: "Name of individual",
     data: "",
     errorConditions: errorName,
   });
   contextAddField(formContext, "idNo", {
     label: "IC No",
+    description: "Malaysian IC No",
     data: "",
     fnMasking: MYIdentiyCardMasking,
     errorConditions: errorIC.map(withPrecondition(isMandatory)),
@@ -69,11 +74,6 @@ export default function F1(incoming: any) {
     fnMasking: MYPhoneMasking,
     errorConditions: [],
   });
-  /**
-   * TODO:
-   * preconditions (an or)
-   * placeholders in input
-   */
 
   contextAddField(formContext, "address1", {
     label: "Address1",

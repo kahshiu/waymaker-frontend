@@ -17,7 +17,8 @@ export default function InputText(props: IInputText) {
     formContext,
   } = props;
   const fieldContext = contextGetField(formContext, fieldName);
-  const { label, data, dataMask, errorResult, disabledResult } = fieldContext;
+  const { label, data, description, dataMask, errorResult, disabledResult } =
+    fieldContext;
 
   const inputRef = useRef<any>(null);
   const isFocused = useSignal(false);
@@ -65,6 +66,7 @@ export default function InputText(props: IInputText) {
           onBlur={blurHandler}
           value={isFocused.value ? data.value : dataMask.value}
           disabled={disabledResult.value.isDisabled}
+          placeholder={description ?? ""}
         />
 
         {errorResult.value.message.length > 0 && (

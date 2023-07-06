@@ -10,6 +10,7 @@ export interface ICondition {
 }
 export interface IConfigField {
   label: string;
+  description?: string;
   data: any;
   fnMasking?: TFnMasking;
   errorConditions?: ICondition[];
@@ -19,6 +20,7 @@ export interface IConfigField {
 // SECTION: formcontext
 export interface IFormContext {
   labels: Map<string, string>;
+  descriptions: Map<string, string>;
   data: Map<string, Signal<any>>;
   dataMasks: Map<string, Signal<any>>;
   errorResults: Map<string, ReadonlySignal<IComputedError>>;
@@ -26,6 +28,7 @@ export interface IFormContext {
 }
 export interface IResultField {
   label: string;
+  description: string;
   data: Signal<any>;
   dataMask: ReadonlySignal<any>;
   errorResult: ReadonlySignal<IComputedError>;
