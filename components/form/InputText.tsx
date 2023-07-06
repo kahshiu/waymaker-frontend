@@ -49,8 +49,7 @@ export default function InputText(props: IInputText) {
   return (
     <>
       <label class="field-label" for={fieldId}>
-        {" "}
-        {label}:{" "}
+        {label}:
       </label>
       <div class="field">
         <input
@@ -99,4 +98,8 @@ export default function InputText(props: IInputText) {
  * 12. radio
  * 13. submit
  *
+ * TODO:
+ * 1. rethink organisation of interfaces for input text/ number
+ * 2. async selector and filter
+ * 3. ways to link up async database retrievals
  * */

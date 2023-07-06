@@ -62,8 +62,7 @@ export default function InputNumber(props: IInputNumber) {
   return (
     <>
       <label class="field-label" for={fieldId}>
-        {" "}
-        {label}:{" "}
+        {label}:
       </label>
       <div class="field">
         <input
