@@ -95,4 +95,9 @@
   .field-info {
     @apply top-0 w-72 text-sm text-slate-400;
   }
+  .button-submit {
+    @apply mt-2 px-3 py-1 border rounded-lg w-52 text-white bg-sky-700 hover:text-slate-500 hover:bg-sky-300 hover:transition-all;
+  }
+
+  /* SECTION: describe fields */
 }

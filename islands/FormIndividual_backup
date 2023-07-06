@@ -1,4 +1,4 @@
-import { useSignal, useComputed } from "@preact/signals";
+import { useSignal, useComputed } from "preact/signals";
 import { INavListItem, NavList } from "../components/NavList.tsx";
 import {
   contextAddField,
@@ -12,8 +12,17 @@ import { defaultComputedDisabled } from "../components/form/Defaults.ts";
 import GroupedOptions from "../components/form/GroupedOptions.tsx";
 import Select from "../components/form/Select.tsx";
 import InputNumber from "../components/form/InputNumber.tsx";
-import { MYIdentiyCardMasking, MYPhoneMasking } from "../components/form/FieldMasks.ts";
-import { errorWhenLengthLessThan, errorWhenLengthMoreThan, errorWhenLengthNotMatch, errorWhenNonNumeric, errorWhenWrongPhonePrefix } from "../components/form/FieldErrors.ts";
+import {
+  MYIdentiyCardMasking,
+  MYPhoneMasking,
+} from "../components/form/FieldMasks.ts";
+import {
+  errorWhenLengthLessThan,
+  errorWhenLengthMoreThan,
+  errorWhenLengthNotMatch,
+  errorWhenNonNumeric,
+  errorWhenWrongPhonePrefix,
+} from "../components/form/FieldErrors.ts";
 
 const navListSidebar: INavListItem[] = [
   { href: "", itemText: "asdf" },
@@ -63,7 +72,7 @@ export default function F1(incoming: any) {
     fnMasking: MYIdentiyCardMasking,
     errorConditions: [
       errorWhenNonNumeric,
-      errorWhenLengthNotMatch({length: 12}),
+      errorWhenLengthNotMatch({ length: 12 }),
       // errorWhenLengthLessThan({length: 12}),
       // errorWhenLengthMoreThan({length: 5}),
     ],
@@ -73,10 +82,7 @@ export default function F1(incoming: any) {
     label: "User phone",
     data: "phone",
     fnMasking: MYPhoneMasking,
-    errorConditions: [
-      errorWhenNonNumeric,
-      errorWhenWrongPhonePrefix,
-    ],
+    errorConditions: [errorWhenNonNumeric, errorWhenWrongPhonePrefix],
   });
 
   contextAddField(formContext, "favourites", {
