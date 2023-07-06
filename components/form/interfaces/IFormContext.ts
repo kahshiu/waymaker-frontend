@@ -1,16 +1,17 @@
 import { Signal, ReadonlySignal } from "@preact/signals";
 import { IComputedError } from "./IComputedError.ts";
 import { IComputedDisabled } from "./IComputedDisabled.ts";
+import { TFnMasking, TFnValidate } from "./TFn.ts";
 
 // SECTION: field config
 export interface ICondition {
-  fnCondition: (field: IResultField, context: IFormContext) => boolean;
+  fnCondition: TFnValidate;
   message: string;
 }
 export interface IConfigField {
   label: string;
   data: any;
-  fnMasking?: (field: IResultField, context: IFormContext) => any;
+  fnMasking?: TFnMasking;
   errorConditions?: ICondition[];
   disabledConditions?: ICondition[];
 }

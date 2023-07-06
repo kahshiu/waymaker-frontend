@@ -1,14 +1,7 @@
-import {
-  IResultField,
-  IFormContext,
-  ICondition,
-} from "../interfaces/IFormContext.ts";
+import { ICondition } from "../interfaces/IFormContext.ts";
 import { IParamsCheckLength } from "../interfaces/IParamsCheckLength.ts";
+import { TFnValidate } from "../interfaces/TFn.ts";
 
-export type TFnValidate = (
-  field: IResultField,
-  formContext: IFormContext
-) => boolean;
 export type TFnValidateLength = (params: IParamsCheckLength) => TFnValidate;
 export type TModFnValidate = (fnValidate: TFnValidate) => TFnValidate;
 export type TModFnValidate2 = (fnValidate: TFnValidate) => TModFnValidate;
@@ -56,9 +49,9 @@ export const isLengthExactly: TFnValidateLength = (params) => (field) => {
   return _value.length == params.length;
 };
 
-export const isLengthLessThan: TFnValidateLength = (params) => (fields) => {
+export const isLengthLessThan: TFnValidateLength = (params) => (field) => {
   const _inclusive = params?.inclusive ?? false;
-  const _value = fields.data.value;
+  const _value = field.data.value;
 
   if (_inclusive) {
     return _value.length <= params.length;
@@ -67,9 +60,9 @@ export const isLengthLessThan: TFnValidateLength = (params) => (fields) => {
   }
 };
 
-export const isLengthMoreThan: TFnValidateLength = (params) => (fields) => {
+export const isLengthMoreThan: TFnValidateLength = (params) => (field) => {
   const _inclusive = params?.inclusive ?? false;
-  const _value = fields.data.value;
+  const _value = field.data.value;
   if (!_value) return false;
 
   if (_inclusive) {
@@ -79,7 +72,7 @@ export const isLengthMoreThan: TFnValidateLength = (params) => (fields) => {
   }
 };
 
-export const isEmail = (field: IResultField) => {
+export const isEmail: TFnValidate = (field) => {
   return true;
 };
 

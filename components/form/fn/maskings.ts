@@ -1,4 +1,4 @@
-import { IResultField, IFormContext } from "../interfaces/IFormContext.ts";
+import { TFnMasking } from "../interfaces/TFn.ts";
 
 /**
  * NOTE: MY Phone numbers
@@ -22,10 +22,7 @@ import { IResultField, IFormContext } from "../interfaces/IFormContext.ts";
  * 09 - Pahang, Terengganu, Kelantan
  */
 
-export const MYPhoneMasking = (
-  field: IResultField,
-  formContext: IFormContext
-) => {
+export const MYPhoneMasking: TFnMasking = (field) => {
   const value = field.data.value;
 
   return value.replace(
@@ -48,10 +45,7 @@ export const MYPhoneMasking = (
   );
 };
 
-export const MYIdentiyCardMasking = (
-  field: IResultField,
-  formContext: IFormContext
-) => {
+export const MYIdentiyCardMasking: TFnMasking = (field) => {
   const value = field.data.value;
 
   return value.replace(
