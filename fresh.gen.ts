@@ -3,20 +3,30 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $0 from "./routes/[name].tsx";
-import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/joke.ts";
-import * as $3 from "./routes/index.tsx";
+import * as $1 from "./routes/[xxx]/test.tsx";
+import * as $2 from "./routes/_app.tsx";
+import * as $3 from "./routes/api/joke.ts";
+import * as $4 from "./routes/company/[id].tsx";
+import * as $5 from "./routes/company/test/[id].tsx";
+import * as $6 from "./routes/index.tsx";
+import * as $7 from "./routes/individual/[id].tsx";
 import * as $$0 from "./islands/Counter.tsx";
+import * as $$1 from "./islands/FormIndividual.tsx";
 
 const manifest = {
   routes: {
     "./routes/[name].tsx": $0,
-    "./routes/_app.tsx": $1,
-    "./routes/api/joke.ts": $2,
-    "./routes/index.tsx": $3,
+    "./routes/[xxx]/test.tsx": $1,
+    "./routes/_app.tsx": $2,
+    "./routes/api/joke.ts": $3,
+    "./routes/company/[id].tsx": $4,
+    "./routes/company/test/[id].tsx": $5,
+    "./routes/index.tsx": $6,
+    "./routes/individual/[id].tsx": $7,
   },
   islands: {
     "./islands/Counter.tsx": $$0,
+    "./islands/FormIndividual.tsx": $$1,
   },
   baseUrl: import.meta.url,
 };

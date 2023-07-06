@@ -1,0 +1,442 @@
+import { useSignal, useComputed } from "@preact/signals";
+import { INavListItem, NavList } from "../components/NavList.tsx";
+import {
+  contextAddField,
+  contextGetField,
+  contextNew,
+} from "../components/form/FormContext.ts";
+import InputText from "../components/form/InputText.tsx";
+import Textarea from "../components/form/Textarea.tsx";
+import { ColumnCount, SelectedCount } from "../components/form/Enums.ts";
+import { defaultComputedDisabled } from "../components/form/Defaults.ts";
+import GroupedOptions from "../components/form/GroupedOptions.tsx";
+import Select from "../components/form/Select.tsx";
+import InputNumber from "../components/form/InputNumber.tsx";
+import { MYIdentiyCardMasking, MYPhoneMasking } from "../components/form/FieldMasks.ts";
+import { errorWhenLengthLessThan, errorWhenLengthMoreThan, errorWhenLengthNotMatch, errorWhenNonNumeric, errorWhenWrongPhonePrefix } from "../components/form/FieldErrors.ts";
+
+const navListSidebar: INavListItem[] = [
+  { href: "", itemText: "asdf" },
+  { href: "", itemText: "asdf" },
+  { href: "", itemText: "asdf" },
+  { href: "", itemText: "asdf" },
+];
+
+export default function F1(incoming: any) {
+  const formContext = contextNew();
+  contextAddField(formContext, "username", {
+    label: "User Name",
+    data: "hello",
+    fnMasking: (field) => "masking: " + field.data.value,
+    errorConditions: [
+      {
+        fnCondition: (field) => field.data.value.length < 5,
+        message: "Length should be more than 5",
+      },
+      {
+        fnCondition: (field) => field.data.value.length > 10,
+        message: "Length should be less than 10",
+      },
+    ],
+  });
+
+  contextAddField(formContext, "password", {
+    label: "User password",
+    data: "password",
+    fnMasking: (field) => "masking: " + field.data.value,
+    disabledConditions: [
+      {
+        fnCondition: (field, context) => {
+          const username = contextGetField(context, "username");
+          const er = username.errorResult.value;
+          const isDisabled = er?.isError ?? false;
+          return isDisabled;
+        },
+        message: "disabled because invalid username",
+      },
+    ],
+  });
+
+  contextAddField(formContext, "ic_no", {
+    label: "IC No",
+    data: "asdafasdf",
+    fnMasking: MYIdentiyCardMasking,
+    errorConditions: [
+      errorWhenNonNumeric,
+      errorWhenLengthNotMatch({length: 12}),
+      // errorWhenLengthLessThan({length: 12}),
+      // errorWhenLengthMoreThan({length: 5}),
+    ],
+  });
+
+  contextAddField(formContext, "tel", {
+    label: "User phone",
+    data: "phone",
+    fnMasking: MYPhoneMasking,
+    errorConditions: [
+      errorWhenNonNumeric,
+      errorWhenWrongPhonePrefix,
+    ],
+  });
+
+  contextAddField(formContext, "favourites", {
+    label: "Favourite Fruits",
+    data: "lemon,apple,something, ",
+    /*
+    fnDisabled: (signal, data, validationResults) => {
+      return false;
+    },
+    */
+  });
+
+  contextAddField(formContext, "fav2", {
+    label: "Favourite2",
+    data: "lemon,apple,something, ",
+    /*
+    fnDisabled: (signal, data, validationResults) => {
+      return false;
+    },
+    */
+  });
+
+  contextAddField(formContext, "days", {
+    label: "Days",
+    data: "monday",
+    /*
+    fnDisabled: (signal, data, validationResults) => {
+      return false;
+    },
+    */
+  });
+
+  contextAddField(formContext, "myNum", {
+    label: "Number",
+    data: 1,
+    /*
+    fnDisabled: (signal, data, validationResults) => {
+      return false;
+    },
+    */
+  });
+
+  contextAddField(formContext, "comments", {
+    label: "Comments",
+    data: "hello",
+    fnMasking: (field) => "masking: " + field.data.value,
+    disabledConditions: [],
+  });
+
+  const xx = useSignal([1, 2, 3]);
+
+  const x = useComputed(() => {
+    const fieldContext = contextGetField(formContext, "favourites");
+    return fieldContext.data.value.length;
+  });
+
+  return (
+    <div class="frame-form">
+      <nav class="float-left sticky top-24 w-52 pt-4">
+        <NavList list={navListSidebar} />
+      </nav>
+
+      <article class="flex flex-col mt-28">
+        <div class="ml-8">breadcrumb</div>
+        <div class="flex flex-row mx-4 px-4 py-2">
+          <article class="w-8/12">
+            <form class="form">
+              <fieldset class="form-fieldset">
+                <legend class="form-legend">something Details</legend>
+              </fieldset>
+
+              <fieldset class="form-fieldset">
+                <legend class="form-legend">Personal Details</legend>
+
+                <div class="form-row">
+                  <InputText
+                    fieldName={"username"}
+                    formContext={formContext}
+                    onInputDebounce={(field, formContext) => {
+                      console.log("onInputDebounce username: ", field);
+                      console.log("onInputDebounce username: ", formContext);
+                    }}
+                  />
+                </div>
+
+                <div class="form-row">
+                  <InputText fieldName={"password"} formContext={formContext} />
+                </div>
+
+                <div class="form-row">
+                  <InputText fieldName={"ic_no"} formContext={formContext} />
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label"> email:</label>
+                  <div class="field">
+                    <input class="field-input" type="email" value="test" />
+                    <div class="input-error">This is an error</div>
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <InputNumber fieldName={"myNum"} formContext={formContext} />
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> range:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="range"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> url:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="url"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <InputText
+                    fieldName={"tel"}
+                    formContext={formContext}
+                    onInputDebounce={(field, formContext) => {
+                      console.log("onInputDebounce phone: ", field);
+                      console.log("onInputDebounce phone: ", formContext);
+                    }}
+                  />
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> week:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="week"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> month:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="month"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> date:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="date"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> time:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="time"
+                      class="px-3 py-1 w-full h-8 border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top"> file:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="file"
+                      class="px-3 py-1 w-full border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <Select
+                    options={[
+                      { labelName: "Monday", value: "mon" },
+                      { labelName: "Tuesday", value: "tue" },
+                    ]}
+                    fieldName={"days"}
+                    formContext={formContext}
+                  />
+                </div>
+
+                <div class="mx-3 my-1">
+                  <label class="inline-block w-52 align-top">browsers:</label>
+                  <div class="inline-block w-72">
+                    <input
+                      type="text"
+                      list="browsers"
+                      name="browser"
+                      id="browser"
+                      class="px-3 py-1 w-full border-solid border-2 border-gray-300 rounded-lg"
+                      value="test"
+                    />
+                    <datalist id="browsers">
+                      <option value="edge">edge</option>
+                      <option value="firefox">firefox</option>
+                      <option value="chrome">chrome</option>
+                      <option value="opera">opera</option>
+                    </datalist>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <GroupedOptions
+                    selectedCount={SelectedCount.SINGLE}
+                    columnCount={ColumnCount.THREE}
+                    fieldName="fav2"
+                    formContext={formContext}
+                    fnDisabledValue={(value, fieldContext, formContext) => {
+                      if (value === "lemon")
+                        return { isDisabled: true, message: "sdfasdf" };
+                      return defaultComputedDisabled;
+                    }}
+                    options={[
+                      { value: "lemon", labelName: "Lemon" },
+                      { value: "apple", labelName: "Apple" },
+                      { value: "banana", labelName: "Banana" },
+                    ]}
+                  />
+                </div>
+
+                <div class="form-row">
+                  <Textarea
+                    fieldName="comments"
+                    formContext={formContext}
+                  ></Textarea>
+                </div>
+
+                <div class="form-row">
+                  <GroupedOptions
+                    selectedCount={SelectedCount.MULTIPLE}
+                    fieldName="favourites"
+                    formContext={formContext}
+                    fnDisabledValue={(value, fieldContext, formContext) => {
+                      if (value === "lemon")
+                        return { isDisabled: true, message: "sdfasdf" };
+                      return defaultComputedDisabled;
+                    }}
+                    options={[
+                      { value: "lemon", labelName: "Lemon" },
+                      { value: "apple", labelName: "Apple" },
+                      { value: "banana", labelName: "Banana" },
+                      { value: "pineapple", labelName: "Pineapple" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "watermelon", labelName: "Watermelon" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                      { value: "mango", labelName: "Mango" },
+                    ]}
+                  />
+                </div>
+              </fieldset>
+
+              <div class="mx-3 my-1">
+                <div class="content-right">
+                  <input
+                    type="submit"
+                    class="mt-2 px-3 py-1 border rounded-lg w-52 text-white bg-sky-700 hover:text-slate-500 hover:bg-sky-300 hover:transition-all"
+                    value="submit"
+                  />
+                </div>
+              </div>
+            </form>
+          </article>
+
+          <article class="w-4/12">
+            <div class="sticky top-24 w-full px-4 py-2">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+              quae ab illo inventore veritatis et quasi architecto beatae vitae
+              dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+              aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
+              eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam
+              est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci
+              velit, sed quia non numquam eius modi tempora incidunt ut labore
+              et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima
+              veniam, quis nostrum exercitationem ullam corporis suscipit
+              laboriosam, nisi ut aliquid ex ea commodi consequatur?
+            </div>
+          </article>
+        </div>
+      </article>
+    </div>
+  );
+}
+
+/*
+      <div class="p-4 mx-auto max-w-screen-md">
+        <img
+          src="/logo.svg"
+          class="w-32 h-32"
+          alt="the fresh logo: a sliced lemon dripping with juice"
+        />
+        {payload && 
+          <form method="post">
+            <input type="text" name="name" value={payload.entity_name} />
+            <button type="submit">Submit</button>
+
+            <p class="my-6"> {payload.entity_id} </p>
+            <p class="my-6"> {payload.entity_name} </p>
+            <p class="my-6"> {payload.contact_details} </p>
+            <p class="my-6"> {payload.address_city} </p>
+            <p class="my-6"> {payload.address_state} </p>
+          </form>
+        }
+
+        <p class={"mx-auto max-w-screen-md"}>
+          Welcome to `fresh`. Try updating this message in the
+          ./routes/index.tsx file, and refresh.
+        </p>
+        <Counter count={count} />
+      </div>
+*/
