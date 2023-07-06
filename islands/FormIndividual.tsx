@@ -176,6 +176,12 @@ export default function F1(incoming: any) {
                     formContext={formContext}
                   />
                 </div>
+                <div class="form-row">
+                  <Textarea
+                    fieldName="note"
+                    formContext={formContext}
+                  ></Textarea>
+                </div>
 
                 {/*
                 <div class="mx-3 my-1">
@@ -215,13 +221,6 @@ export default function F1(incoming: any) {
                       { value: "banana", labelName: "Banana" },
                     ]}
                   />
-                </div>
-
-                <div class="form-row">
-                  <Textarea
-                    fieldName="comments"
-                    formContext={formContext}
-                  ></Textarea>
                 </div>
 
                 <div class="form-row">
