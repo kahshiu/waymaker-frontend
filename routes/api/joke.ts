@@ -14,10 +14,13 @@ const JOKES = [
   "An SEO expert walked into a bar, pub, inn, tavern, hostelry, public house.",
 ];
 
-export const handler = async (_req: Request, _ctx: HandlerContext): Promise<Response> => {
+export const handler = async (
+  _req: Request,
+  _ctx: HandlerContext
+): Promise<Response> => {
   const x = await fetch("http://localhost:8000");
   const randomIndex = Math.floor(Math.random() * JOKES.length);
   const body = JOKES[randomIndex];
-  console.log("console",body);
+  console.log("console", body);
   return new Response(body);
 };

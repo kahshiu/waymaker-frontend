@@ -7,8 +7,8 @@ import {
 } from "./errorsBasic.ts";
 
 export const errorName = [
-  errorWhenLengthMoreThan({ length: 5 }),
-  errorWhenLengthLessThan({ length: 100 }),
+  errorWhenLengthLessThan({ length: 5 }),
+  errorWhenLengthMoreThan({ length: 100 }),
 ];
 
 export const errorIC = [
@@ -18,4 +18,7 @@ export const errorIC = [
 
 export const errorPhoneNo = [errorWhenNonNumeric, errorWhenWrongPhonePrefix];
 
-export const errorPostcode = [errorWhenNonNumeric, errorWhenWrongPhonePrefix];
+export const errorPostcode = [
+  errorWhenNonNumeric,
+  errorWhenLengthMoreThan({ length: 5 }),
+];

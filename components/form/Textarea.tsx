@@ -32,15 +32,13 @@ export default function Textarea(props: ITextarea) {
   }, inputDelay ?? 500);
 
   const inputHandler = (e: any) => {
-    console.log("hitting");
     debounceHandler(e);
   };
 
   return (
     <>
       <label class="field-label" for={fieldId}>
-        {" "}
-        {label}:{" "}
+        {label}:
       </label>
       <div class="field">
         <textarea

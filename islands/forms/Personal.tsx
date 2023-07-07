@@ -9,7 +9,7 @@ export default function PagePersonal(props: IPagePersonal) {
   const formContext = contextNew();
 
   return (
-    <form class="form">
+    <form class="form" method="POST" encType="multipart/form-data">
       <PersonalDetails
         formContext={formContext}
         payload={props.payload ?? {}}

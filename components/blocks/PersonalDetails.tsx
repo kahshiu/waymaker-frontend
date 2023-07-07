@@ -3,7 +3,7 @@ import { contextAddField } from "../form/FormContext.ts";
 import InputText from "../form/InputText.tsx";
 import Select from "../form/Select.tsx";
 import Textarea from "../form/Textarea.tsx";
-import { errorWhenLengthLessThan } from "../form/fn/errorsBasic.ts";
+import { errorWhenLengthMoreThan } from "../form/fn/errorsBasic.ts";
 import {
   errorIC,
   errorName,
@@ -16,84 +16,95 @@ import { IBlockForm } from "./interfaces/IBlockForm.ts";
 
 export default function PersonalDetails(props: IBlockForm<any>) {
   const { formContext, payload } = props;
+  const { form, states } = payload;
+
+  contextAddField(formContext, "entityId", {
+    label: "Id",
+    description: "Personal ID",
+    data: form.entityId ?? "",
+  });
 
   contextAddField(formContext, "entityName", {
     label: "Name",
     description: "Name of individual",
-    data: payload.entityName ?? "",
+    data: form.entityName ?? "",
     errorConditions: errorName,
   });
-  contextAddField(formContext, "idNo", {
+  contextAddField(formContext, "entityIc", {
     label: "IC No",
     description: "Malaysian IC No",
-    data: payload.entityIc ?? "",
+    data: form.entityIc ?? "",
     fnMasking: MYIdentiyCardMasking,
     errorConditions: errorIC.map(withPrecondition(isMandatory)),
   });
 
   contextAddField(formContext, "mobileNo", {
     label: "Mobile No",
-    data: payload.mobileNo ?? "",
+    data: form.mobileNo ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "officeNo", {
     label: "Office No",
-    data: payload.officeNo ?? "",
+    data: form.officeNo ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "email", {
     label: "Email",
-    data: payload.email ?? "",
+    data: form.email ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: [],
   });
 
   contextAddField(formContext, "address1", {
     label: "Address1",
-    data: payload.address1 ?? "",
-    errorConditions: [errorWhenLengthLessThan({ length: 100 })],
+    data: form.address1 ?? "",
+    errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
   contextAddField(formContext, "address2", {
     label: "Address2",
-    data: payload.address2 ?? "",
-    errorConditions: [errorWhenLengthLessThan({ length: 100 })],
+    data: form.address2 ?? "",
+    errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
   contextAddField(formContext, "address3", {
     label: "Address3",
-    data: payload.address3 ?? "",
-    errorConditions: [errorWhenLengthLessThan({ length: 100 })],
+    data: form.address3 ?? "",
+    errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
 
   contextAddField(formContext, "postcode", {
     label: "Postcode",
-    data: payload.postcode ?? "",
+    data: form.postcode ?? "",
     errorConditions: errorPostcode.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "city", {
     label: "City",
-    data: payload.city ?? "",
-    errorConditions: [errorWhenLengthLessThan({ length: 100 })],
+    data: form.city ?? "",
+    errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
   contextAddField(formContext, "state", {
     label: "State",
-    data: payload.state ?? 0,
+    data: form.state ?? 0,
     errorConditions: [],
   });
 
   contextAddField(formContext, "note", {
     label: "Notes",
-    data: "",
+    data: form.note ?? "",
     disabledConditions: [],
   });
 
   return (
     <>
       <fieldset class="form-fieldset">
-        <legend class="form-legend">Personal Details</legend>
+        <legend class="form-legend">
+          Personal Details{" "}
+          {form?.entityId > 0 && <span>(ID: {form?.entityId})</span>}
+        </legend>
 
         <div class="form-row">
+          <input type="hidden" name="entityId" value={form.entityId} />
           <input
             type="hidden"
             name="entityType"
@@ -103,8 +114,8 @@ export default function PersonalDetails(props: IBlockForm<any>) {
         </div>
 
         <div class="form-row">
-          <input type="hidden" name="idType" value={IdType.IC_NO} />
-          <InputText fieldName={"idNo"} formContext={formContext} />
+          <input type="hidden" name="entityIcType" value={IdType.IC_NO} />
+          <InputText fieldName={"entityIc"} formContext={formContext} />
         </div>
 
         <div class="form-row">
@@ -144,10 +155,9 @@ export default function PersonalDetails(props: IBlockForm<any>) {
 
         <div class="form-row">
           <Select
-            options={[
-              { labelName: "Monday", value: "mon" },
-              { labelName: "Tuesday", value: "tue" },
-            ]}
+            options={(states || [])?.map((item: any) => {
+              return { labelName: item.long, value: item.num };
+            })}
             fieldName={"state"}
             formContext={formContext}
           />

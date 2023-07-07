@@ -9,6 +9,7 @@ export default function InputText(props: IInputText) {
   const {
     inputType,
     inputDelay,
+    inputReadOnly,
     onInput,
     onFocus,
     onBlur,
@@ -66,6 +67,7 @@ export default function InputText(props: IInputText) {
           value={isFocused.value ? data.value : dataMask.value}
           disabled={disabledResult.value.isDisabled}
           placeholder={description ?? ""}
+          readOnly={inputReadOnly}
         />
 
         {errorResult.value.message.length > 0 && (

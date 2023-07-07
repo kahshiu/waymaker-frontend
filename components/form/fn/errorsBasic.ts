@@ -25,8 +25,8 @@ export const errorWhenLengthLessThan: TFnErrorLength = (
   params: IParamsCheckLength
 ) => {
   return {
-    fnCondition: not(isLengthLessThan(params)),
-    message: `Length should be less than ${params.length}`,
+    fnCondition: isLengthLessThan(params),
+    message: `Length should be more than ${params.length}`,
   };
 };
 
@@ -34,8 +34,8 @@ export const errorWhenLengthMoreThan: TFnErrorLength = (
   params: IParamsCheckLength
 ) => {
   return {
-    fnCondition: not(isLengthMoreThan(params)),
-    message: `Length should be more than ${params.length}`,
+    fnCondition: isLengthMoreThan(params),
+    message: `Length should be less than ${params.length}`,
   };
 };
 

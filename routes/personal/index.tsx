@@ -1,21 +1,70 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import { INavListItem, NavList } from "#components/NavList.tsx";
 import { GlobalFrame } from "#components/globals/GlobalFrame.tsx";
 import Personal from "#islands/forms/Personal.tsx";
+import { backendApi } from "../../util/globals.ts";
+
+interface IReturned {
+  status: string;
+  payload: any;
+}
+
+export const getIndividual = async (): Promise<IReturned> => {
+  // const { id } = context.params;
+  // const resp = await fetch(`${backendApi}/individual/${id}`);
+  /*
+  if (resp.status === 404) {
+    return {
+      status: "ERROR",
+      payload: {},
+    };
+  }
+
+  return await resp.json();
+  */
+};
 
 export const handler: Handlers<any | null> = {
   async GET(req, context) {
-    const { id } = context.params;
-    // const resp = await fetch(`https://api.github.com/users/${username}`);
-    const resp = await fetch(`http://backend-api:8000/api/individual/1`);
-    console.log(resp);
-
-    if (resp.status === 404) {
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id") || "0";
+    const respForm = await fetch(`${backendApi}/individual/${id}`);
+    if (respForm.status === 404) {
       return context.render(null);
     }
-    const user = await resp.json();
-    console.log(user);
-    return context.render(user);
+
+    const respStates = await fetch(`${backendApi}/definitions/states`);
+    if (respStates.status === 404) {
+      return context.render(null);
+    }
+
+    const dataForm = await respForm.json();
+    const dataStates = await respStates.json();
+    return context.render({
+      status: "OK",
+      payload: {
+        form: dataForm.payload,
+        states: dataStates.payload,
+      },
+    });
+  },
+
+  async POST(req, context) {
+    const formData = await req.formData();
+    const json = Object.fromEntries(formData);
+    await fetch(`${backendApi}/individual`, {
+      method: "PATCH",
+      body: JSON.stringify(json),
+    });
+
+    // Redirect user to thank you page.
+    const headers = new Headers();
+    const id = formData.get("entityId");
+    headers.set("location", `/personal?id=${id}`);
+    return new Response(null, {
+      status: 303,
+      headers,
+    });
   },
 
   /*
@@ -37,13 +86,6 @@ export const handler: Handlers<any | null> = {
     console.log("tracing entityName: ", resp);
     // Add email to list.
 
-    // Redirect user to thank you page.
-    const headers = new Headers();
-    headers.set("location", "/");
-    return new Response(null, {
-      status: 303, // See Other
-      headers,
-    });
   },
   */
 };
@@ -56,6 +98,9 @@ export default function Home(props: PageProps) {
     { href: "", itemText: "asdf" },
   ];
 
+  const { status, payload } = props.data;
+  const isBlank = status === "BLANK";
+
   return (
     <GlobalFrame>
       <div class="frame-form">
@@ -64,10 +109,12 @@ export default function Home(props: PageProps) {
         </nav>
 
         <article class="flex flex-col mt-28">
-          <div class="ml-8 font-bold text-lg">Personal</div>
+          <div class="ml-8 font-bold text-lg">
+            {isBlank ? "New Personal" : "Edit Personal"}
+          </div>
           <div class="flex flex-row mx-4 px-4 py-2">
             <article class="w-8/12">
-              <Personal payload={props.data.payload} />
+              <Personal payload={payload} />
             </article>
 
             <article class="w-4/12">
