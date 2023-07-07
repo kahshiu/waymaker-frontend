@@ -3,7 +3,8 @@
   "tasks": {
     "start:local": "./tools/tailwindcss -i ./static/styles/input.css -o ./static/styles/tailwind.css --minify --watch & deno task start",
     "start:docker": "/tools/tailwindcss -i ./static/styles/input.css -o ./static/styles/tailwind.css --minify --watch & deno task start",
-    "start": "deno run -A --watch=static/,routes/ --allow-read --cached-only dev.ts",
+    "start:cache": "deno run -A --watch=static/,routes/ --allow-read --cached-only dev.ts",
+    "start": "deno run -A --watch=static/,routes/ --allow-read dev.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "imports": {
