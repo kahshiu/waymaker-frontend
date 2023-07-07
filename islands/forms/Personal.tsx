@@ -1,11 +1,19 @@
 import PersonalDetails from "../../components/blocks/PersonalDetails.tsx";
 import { contextNew } from "../../components/form/FormContext.ts";
 
-export default function PagePersonal() {
+interface IPagePersonal {
+  payload: any;
+}
+
+export default function PagePersonal(props: IPagePersonal) {
   const formContext = contextNew();
+
   return (
     <form class="form">
-      <PersonalDetails formContext={formContext} fromSource={{}} />
+      <PersonalDetails
+        formContext={formContext}
+        payload={props.payload ?? {}}
+      />
 
       <div class="mx-3 my-1">
         <div class="content-right">

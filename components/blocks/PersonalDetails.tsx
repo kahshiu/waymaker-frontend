@@ -15,70 +15,70 @@ import { withPrecondition, isMandatory } from "../form/fn/validators.ts";
 import { IBlockForm } from "./interfaces/IBlockForm.ts";
 
 export default function PersonalDetails(props: IBlockForm<any>) {
-  const { formContext, fromSource } = props;
+  const { formContext, payload } = props;
 
   contextAddField(formContext, "entityName", {
     label: "Name",
     description: "Name of individual",
-    data: fromSource.entityName ?? "",
+    data: payload.entityName ?? "",
     errorConditions: errorName,
   });
   contextAddField(formContext, "idNo", {
     label: "IC No",
     description: "Malaysian IC No",
-    data: fromSource.entityName ?? "",
+    data: payload.entityIc ?? "",
     fnMasking: MYIdentiyCardMasking,
     errorConditions: errorIC.map(withPrecondition(isMandatory)),
   });
 
   contextAddField(formContext, "mobileNo", {
     label: "Mobile No",
-    data: fromSource.mobileNo ?? "",
+    data: payload.mobileNo ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "officeNo", {
     label: "Office No",
-    data: fromSource.officeNo ?? "",
+    data: payload.officeNo ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "email", {
     label: "Email",
-    data: fromSource.email ?? "",
+    data: payload.email ?? "",
     fnMasking: MYPhoneMasking,
     errorConditions: [],
   });
 
   contextAddField(formContext, "address1", {
     label: "Address1",
-    data: fromSource.address1 ?? "",
+    data: payload.address1 ?? "",
     errorConditions: [errorWhenLengthLessThan({ length: 100 })],
   });
   contextAddField(formContext, "address2", {
     label: "Address2",
-    data: fromSource.address2 ?? "",
+    data: payload.address2 ?? "",
     errorConditions: [errorWhenLengthLessThan({ length: 100 })],
   });
   contextAddField(formContext, "address3", {
     label: "Address3",
-    data: fromSource.address3 ?? "",
+    data: payload.address3 ?? "",
     errorConditions: [errorWhenLengthLessThan({ length: 100 })],
   });
 
   contextAddField(formContext, "postcode", {
     label: "Postcode",
-    data: fromSource.postcode ?? "",
+    data: payload.postcode ?? "",
     errorConditions: errorPostcode.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "city", {
     label: "City",
-    data: fromSource.city ?? "",
+    data: payload.city ?? "",
     errorConditions: [errorWhenLengthLessThan({ length: 100 })],
   });
   contextAddField(formContext, "state", {
     label: "State",
-    data: fromSource.state ?? 0,
+    data: payload.state ?? 0,
     errorConditions: [],
   });
 
@@ -89,65 +89,77 @@ export default function PersonalDetails(props: IBlockForm<any>) {
   });
 
   return (
-    <fieldset class="form-fieldset">
-      <legend class="form-legend">Personal Details</legend>
+    <>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Personal Details</legend>
 
-      <div class="form-row">
-        <input type="hidden" name="entityType" value={EntityType.INDIVIDUAL} />
-        <InputText fieldName={"entityName"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <input
+            type="hidden"
+            name="entityType"
+            value={EntityType.INDIVIDUAL}
+          />
+          <InputText fieldName={"entityName"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <input type="hidden" name="idType" value={IdType.IC_NO} />
-        <InputText fieldName={"idNo"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <input type="hidden" name="idType" value={IdType.IC_NO} />
+          <InputText fieldName={"idNo"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"mobileNo"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"mobileNo"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"officeNo"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"officeNo"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"email"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"email"} formContext={formContext} />
+        </div>
+      </fieldset>
 
-      <div class="form-row">
-        <InputText fieldName={"address1"} formContext={formContext} />
-      </div>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Address</legend>
+        <div class="form-row">
+          <InputText fieldName={"address1"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"address2"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"address2"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"address3"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"address3"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"postcode"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"postcode"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <InputText fieldName={"city"} formContext={formContext} />
-      </div>
+        <div class="form-row">
+          <InputText fieldName={"city"} formContext={formContext} />
+        </div>
 
-      <div class="form-row">
-        <Select
-          options={[
-            { labelName: "Monday", value: "mon" },
-            { labelName: "Tuesday", value: "tue" },
-          ]}
-          fieldName={"state"}
-          formContext={formContext}
-        />
-      </div>
+        <div class="form-row">
+          <Select
+            options={[
+              { labelName: "Monday", value: "mon" },
+              { labelName: "Tuesday", value: "tue" },
+            ]}
+            fieldName={"state"}
+            formContext={formContext}
+          />
+        </div>
+      </fieldset>
 
-      <div class="form-row">
-        <Textarea fieldName="note" formContext={formContext}></Textarea>
-      </div>
-    </fieldset>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Additional</legend>
+        <div class="form-row">
+          <Textarea fieldName="note" formContext={formContext}></Textarea>
+        </div>
+      </fieldset>
+    </>
   );
 }

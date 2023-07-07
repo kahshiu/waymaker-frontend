@@ -4,6 +4,21 @@ import { GlobalFrame } from "#components/globals/GlobalFrame.tsx";
 import Personal from "#islands/forms/Personal.tsx";
 
 export const handler: Handlers<any | null> = {
+  async GET(req, context) {
+    const { id } = context.params;
+    // const resp = await fetch(`https://api.github.com/users/${username}`);
+    const resp = await fetch(`http://backend-api:8000/api/individual/1`);
+    console.log(resp);
+
+    if (resp.status === 404) {
+      return context.render(null);
+    }
+    const user = await resp.json();
+    console.log(user);
+    return context.render(user);
+  },
+
+  /*
   async POST(req, ctx) {
     const form = await req.formData();
     const entityName = form.get("name")?.toString();
@@ -30,15 +45,17 @@ export const handler: Handlers<any | null> = {
       headers,
     });
   },
+  */
 };
 
-export default function Home(incoming: PageProps) {
+export default function Home(props: PageProps) {
   const navListSidebar: INavListItem[] = [
     { href: "", itemText: "asdf" },
     { href: "", itemText: "asdf" },
     { href: "", itemText: "asdf" },
     { href: "", itemText: "asdf" },
   ];
+
   return (
     <GlobalFrame>
       <div class="frame-form">
@@ -47,19 +64,19 @@ export default function Home(incoming: PageProps) {
         </nav>
 
         <article class="flex flex-col mt-28">
-          <div class="ml-8">breadcrumb</div>
+          <div class="ml-8 font-bold text-lg">Personal</div>
           <div class="flex flex-row mx-4 px-4 py-2">
             <article class="w-8/12">
-              <Personal />
+              <Personal payload={props.data.payload} />
             </article>
 
             <article class="w-4/12">
               <div class="sticky top-24 w-full px-4 py-2">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
+                afasdf Sed ut perspiciatis unde omnis iste natus error sit
+                voluptatem accusantium doloremque laudantium, totam rem aperiam,
+                eaque ipsa quae ab illo inventore veritatis et quasi architecto
+                beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
+                quia voluptas sit aspernatur aut odit aut fugit, sed quia
                 consequuntur magni dolores eos qui ratione voluptatem sequi
                 nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
                 sit amet, consectetur, adipisci velit, sed quia non numquam eius
