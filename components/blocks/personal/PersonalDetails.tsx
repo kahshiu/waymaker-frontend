@@ -1,22 +1,36 @@
-import { EntityType, IdType } from "../form/Enums.ts";
-import { contextAddField } from "../form/FormContext.ts";
-import InputText from "../form/InputText.tsx";
-import Select from "../form/Select.tsx";
-import Textarea from "../form/Textarea.tsx";
-import { errorWhenLengthMoreThan } from "../form/fn/errorsBasic.ts";
+import { EntityType, IdType } from "#components/form/Enums.ts";
+import {
+  contextAddField,
+  contextGetField,
+} from "#components/form/FormContext.ts";
+import InputText from "#components/form/InputText.tsx";
+import Select from "#components/form/Select.tsx";
+import Textarea from "#components/form/Textarea.tsx";
+import { errorWhenLengthMoreThan } from "#components/form/fn/errorsBasic.ts";
 import {
   errorIC,
   errorName,
   errorPhoneNo,
   errorPostcode,
-} from "../form/fn/errorsSpecial.ts";
-import { MYIdentiyCardMasking, MYPhoneMasking } from "../form/fn/maskings.ts";
-import { withPrecondition, isMandatory } from "../form/fn/validators.ts";
-import { IBlockForm } from "./interfaces/IBlockForm.ts";
+} from "#components/form/fn/errorsSpecial.ts";
+import {
+  MYIdentiyCardMasking,
+  MYPhoneMasking,
+} from "#components/form/fn/maskings.ts";
+import {
+  withPrecondition,
+  isMandatory,
+} from "#components/form/fn/validators.ts";
+import { IBlockForm } from "#components/blocks/interfaces/IBlockForm.ts";
+import InputHidden from "#components/form/InputHidden.tsx";
 
 export default function PersonalDetails(props: IBlockForm<any>) {
   const { formContext, payload } = props;
-  const { form, states } = payload;
+  const { entityData, statesData } = payload;
+  const form = entityData.payload;
+  const states = statesData.payload;
+  console.log("tracing PersonalDetails, form: ", form, entityData);
+  console.log("tracing PersonalDetails, states: ", form, statesData);
 
   contextAddField(formContext, "entityId", {
     label: "Id",
@@ -24,11 +38,22 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     data: form.entityId ?? "",
   });
 
+  contextAddField(formContext, "entityType", {
+    label: "Entity Type",
+    description: "Entity Type",
+    data: form.entityType ?? EntityType.INDIVIDUAL,
+  });
+
   contextAddField(formContext, "entityName", {
     label: "Name",
     description: "Name of individual",
     data: form.entityName ?? "",
     errorConditions: errorName,
+  });
+  contextAddField(formContext, "entityIcType", {
+    label: "IC No Type",
+    description: "Malaysian IC No",
+    data: IdType.IC_NO,
   });
   contextAddField(formContext, "entityIc", {
     label: "IC No",
@@ -73,19 +98,19 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
 
-  contextAddField(formContext, "postcode", {
+  contextAddField(formContext, "addressPostcode", {
     label: "Postcode",
-    data: form.postcode ?? "",
+    data: form.addressPostcode ?? "",
     errorConditions: errorPostcode.map(withPrecondition(isMandatory)),
   });
-  contextAddField(formContext, "city", {
+  contextAddField(formContext, "addressCity", {
     label: "City",
-    data: form.city ?? "",
+    data: form.addressCity ?? "",
     errorConditions: [errorWhenLengthMoreThan({ length: 100 })],
   });
-  contextAddField(formContext, "state", {
+  contextAddField(formContext, "addressState", {
     label: "State",
-    data: form.state ?? 0,
+    data: form.addressState ?? 0,
     errorConditions: [],
   });
 
@@ -94,6 +119,11 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     data: form.note ?? "",
     disabledConditions: [],
   });
+
+  console.log(
+    "tracing PersonalDetails, formContext: ",
+    contextGetField(formContext, "entityType").data.value
+  );
 
   return (
     <>
@@ -104,17 +134,13 @@ export default function PersonalDetails(props: IBlockForm<any>) {
         </legend>
 
         <div class="form-row">
-          <input type="hidden" name="entityId" value={form.entityId} />
-          <input
-            type="hidden"
-            name="entityType"
-            value={EntityType.INDIVIDUAL}
-          />
+          <InputHidden fieldName={"entityId"} formContext={formContext} />
+          <InputHidden fieldName={"entityType"} formContext={formContext} />
           <InputText fieldName={"entityName"} formContext={formContext} />
         </div>
 
         <div class="form-row">
-          <input type="hidden" name="entityIcType" value={IdType.IC_NO} />
+          <InputHidden fieldName={"entityIcType"} formContext={formContext} />
           <InputText fieldName={"entityIc"} formContext={formContext} />
         </div>
 
@@ -146,11 +172,11 @@ export default function PersonalDetails(props: IBlockForm<any>) {
         </div>
 
         <div class="form-row">
-          <InputText fieldName={"postcode"} formContext={formContext} />
+          <InputText fieldName={"addressPostcode"} formContext={formContext} />
         </div>
 
         <div class="form-row">
-          <InputText fieldName={"city"} formContext={formContext} />
+          <InputText fieldName={"addressCity"} formContext={formContext} />
         </div>
 
         <div class="form-row">
@@ -158,7 +184,7 @@ export default function PersonalDetails(props: IBlockForm<any>) {
             options={(states || [])?.map((item: any) => {
               return { labelName: item.long, value: item.num };
             })}
-            fieldName={"state"}
+            fieldName={"addressState"}
             formContext={formContext}
           />
         </div>

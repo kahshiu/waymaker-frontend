@@ -1,4 +1,4 @@
-import { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
+import { Handlers, PageProps } from "$fresh/server.ts";
 import { INavListItem, NavList } from "#components/NavList.tsx";
 import { GlobalFrame } from "#components/globals/GlobalFrame.tsx";
 import Personal from "#islands/forms/Personal.tsx";
@@ -9,58 +9,46 @@ interface IReturned {
   payload: any;
 }
 
-export const getIndividual = async (): Promise<IReturned> => {
-  // const { id } = context.params;
-  // const resp = await fetch(`${backendApi}/individual/${id}`);
-  /*
-  if (resp.status === 404) {
-    return {
-      status: "ERROR",
-      payload: {},
-    };
-  }
-
-  return await resp.json();
-  */
-};
-
 export const handler: Handlers<any | null> = {
   async GET(req, context) {
     const url = new URL(req.url);
     const id = url.searchParams.get("id") || "0";
-    const respForm = await fetch(`${backendApi}/individual/${id}`);
-    if (respForm.status === 404) {
+
+    const statesResp = await fetch(`${backendApi}/definitions/states`);
+    if (statesResp.status === 404) {
       return context.render(null);
     }
+    const statesData = await statesResp.json();
 
-    const respStates = await fetch(`${backendApi}/definitions/states`);
-    if (respStates.status === 404) {
-      return context.render(null);
+    let entityData: any = { status: "BLANK", payload: {} };
+    if (id && Number(id) > 0) {
+      const entityResp = await fetch(`${backendApi}/individual/${id}`);
+      if (entityResp.status === 404) {
+        return context.render(null);
+      }
+      entityData = await entityResp.json();
     }
 
-    const dataForm = await respForm.json();
-    const dataStates = await respStates.json();
-    return context.render({
-      status: "OK",
-      payload: {
-        form: dataForm.payload,
-        states: dataStates.payload,
-      },
-    });
+    return context.render({ entityData, statesData });
   },
 
   async POST(req, context) {
     const formData = await req.formData();
     const json = Object.fromEntries(formData);
-    await fetch(`${backendApi}/individual`, {
-      method: "PATCH",
+    const id = formData.get("entityId");
+    console.log("tracing personal POST, json: ", json);
+
+    const method = id && Number(id) > 0 ? "PATCH" : "POST";
+    const entityResp = await fetch(`${backendApi}/individual`, {
+      method,
       body: JSON.stringify(json),
     });
+    const entityData = await entityResp.json();
+    const entityId = entityData?.payload?.entityId;
 
-    // Redirect user to thank you page.
+    // Redirect to edit page
     const headers = new Headers();
-    const id = formData.get("entityId");
-    headers.set("location", `/personal?id=${id}`);
+    headers.set("location", `/personal?id=${entityId}`);
     return new Response(null, {
       status: 303,
       headers,
@@ -90,6 +78,23 @@ export const handler: Handlers<any | null> = {
   */
 };
 
+const NoteAtCreation = () => {
+  return (
+    <div>
+      <div class="text-lg font-bold">Note:</div>
+      <div>You can attach services to person after saving details.</div>
+    </div>
+  );
+};
+function NoteAtEdit() {
+  return (
+    <div>
+      <div class="text-lg font-bold">Note:</div>
+      <div>You can attach services to person after saving details.</div>
+    </div>
+  );
+}
+
 export default function Home(props: PageProps) {
   const navListSidebar: INavListItem[] = [
     { href: "", itemText: "asdf" },
@@ -98,8 +103,8 @@ export default function Home(props: PageProps) {
     { href: "", itemText: "asdf" },
   ];
 
-  const { status, payload } = props.data;
-  const isBlank = status === "BLANK";
+  const { entityData } = props.data;
+  const isBlank = entityData.status === "BLANK";
 
   return (
     <GlobalFrame>
@@ -114,23 +119,12 @@ export default function Home(props: PageProps) {
           </div>
           <div class="flex flex-row mx-4 px-4 py-2">
             <article class="w-8/12">
-              <Personal payload={payload} />
+              <Personal payload={props.data} />
             </article>
 
             <article class="w-4/12">
               <div class="sticky top-24 w-full px-4 py-2">
-                afasdf Sed ut perspiciatis unde omnis iste natus error sit
-                voluptatem accusantium doloremque laudantium, totam rem aperiam,
-                eaque ipsa quae ab illo inventore veritatis et quasi architecto
-                beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem
-                quia voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                sit amet, consectetur, adipisci velit, sed quia non numquam eius
-                modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut
-                aliquid ex ea commodi consequatur?
+                {isBlank ? <NoteAtCreation /> : <NoteAtEdit />}
               </div>
             </article>
           </div>

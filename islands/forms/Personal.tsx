@@ -1,5 +1,5 @@
-import PersonalDetails from "../../components/blocks/PersonalDetails.tsx";
-import { contextNew } from "../../components/form/FormContext.ts";
+import PersonalDetails from "#components/blocks/personal/PersonalDetails.tsx";
+import { contextNew } from "#components/form/FormContext.ts";
 
 interface IPagePersonal {
   payload: any;
