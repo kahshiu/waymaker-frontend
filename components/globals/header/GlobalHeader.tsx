@@ -16,15 +16,19 @@ export const GlobalHeader = () => {
       <div class="mt-auto">
         <div class="flex flex-row">
           <nav class="grow mt-auto">
+            {/*
             <NavList list={navListTop} listClassName="nav-list-row" />
+            */}
           </nav>
           <div class="grow mb-1 text-sm text-black text-right">
+            {/*
             <div class="inline-block">
               <FormQuickSearch />
             </div>
             <div class="inline-block pl-2">
               <FormLogout />
             </div>
+            */}
           </div>
         </div>
       </div>
