@@ -23,14 +23,20 @@ import {
 } from "#components/form/fn/validators.ts";
 import { IBlockForm } from "#components/blocks/interfaces/IBlockForm.ts";
 import InputHidden from "#components/form/InputHidden.tsx";
+import { ConsoleTags } from "../../../util/globalEnums.ts";
+import { consoleDebug } from "../../../util/Console.ts";
 
 export default function PersonalDetails(props: IBlockForm<any>) {
   const { formContext, payload } = props;
   const { entityData, statesData } = payload;
   const form = entityData.payload;
   const states = statesData.payload;
-  console.log("tracing PersonalDetails, form: ", form, entityData);
-  console.log("tracing PersonalDetails, states: ", form, statesData);
+  consoleDebug("tracing PersonalDetails, form: ", { form, entityData }, [
+    ConsoleTags.PERSONAL,
+  ]);
+  consoleDebug("tracing PersonalDetails, states: ", { form, statesData }, [
+    ConsoleTags.PERSONAL,
+  ]);
 
   contextAddField(formContext, "entityId", {
     label: "Id",
@@ -120,9 +126,10 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     disabledConditions: [],
   });
 
-  console.log(
+  consoleDebug(
     "tracing PersonalDetails, formContext: ",
-    contextGetField(formContext, "entityType").data.value
+    contextGetField(formContext, "entityType").data.value,
+    [ConsoleTags.PERSONAL]
   );
 
   return (

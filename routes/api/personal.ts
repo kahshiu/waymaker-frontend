@@ -15,6 +15,5 @@ export const handler = async (
   }
 
   const data = await resp.json();
-  console.log("tracing from personal", data);
   return new Response(JSON.stringify(data));
 };

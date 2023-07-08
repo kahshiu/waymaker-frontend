@@ -2,7 +2,9 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { INavListItem, NavList } from "#components/NavList.tsx";
 import { GlobalFrame } from "#components/globals/GlobalFrame.tsx";
 import Personal from "#islands/forms/Personal.tsx";
-import { backendApi } from "../../util/globals.ts";
+import { backendApi, createUrl } from "#util/globals.ts";
+import { consoleDebug } from "#util/Console.ts";
+import { ConsoleTags } from "#util/globalEnums.ts";
 
 interface IReturned {
   status: string;
@@ -36,7 +38,9 @@ export const handler: Handlers<any | null> = {
     const formData = await req.formData();
     const json = Object.fromEntries(formData);
     const id = formData.get("entityId");
-    console.log("tracing personal POST, json: ", json);
+    consoleDebug("tracing personal POST, json: ", { json }, [
+      ConsoleTags.PERSONAL,
+    ]);
 
     const method = id && Number(id) > 0 ? "PATCH" : "POST";
     const entityResp = await fetch(`${backendApi}/individual`, {
@@ -71,7 +75,6 @@ export const handler: Handlers<any | null> = {
       },
     });
 
-    console.log("tracing entityName: ", resp);
     // Add email to list.
 
   },
@@ -90,18 +93,33 @@ function NoteAtEdit() {
   return (
     <div>
       <div class="text-lg font-bold">Note:</div>
-      <div>You can attach services to person after saving details.</div>
+      <div>Personal has no services attached. Create one now</div>
     </div>
   );
 }
 
-export default function Home(props: PageProps) {
-  const navListSidebar: INavListItem[] = [
+export default function Index(props: PageProps) {
+  const url = new URL(props.url);
+  const id = url.searchParams.get("id");
+
+  const navListSidebar1: INavListItem[] = [];
+  const navListSidebar2: INavListItem[] = [];
+
+  navListSidebar1.push({
+    href: createUrl("personal/service", url.searchParams),
+    itemText: "New Service",
+  });
+
+  navListSidebar2.push({
+    href: createUrl("personal/service", url.searchParams),
+    itemText: "New Service",
+  });
+
+  /*
     { href: "", itemText: "asdf" },
     { href: "", itemText: "asdf" },
     { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
-  ];
+    */
 
   const { entityData } = props.data;
   const isBlank = entityData.status === "BLANK";
@@ -110,7 +128,7 @@ export default function Home(props: PageProps) {
     <GlobalFrame>
       <div class="frame-form">
         <nav class="float-left sticky top-24 w-52 pt-4">
-          <NavList list={navListSidebar} />
+          <NavList list={navListSidebar1} listClassName="nav-list-col" />
         </nav>
 
         <article class="flex flex-col mt-28">

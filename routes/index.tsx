@@ -1,49 +1,14 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { INavListItem, NavList } from "../components/NavList.tsx";
+import { contextGetField } from "../components/form/FormContext.ts";
 import { GlobalFrame } from "../components/globals/GlobalFrame.tsx";
 import Personal from "../islands/forms/Personal.tsx";
+import { consoleDebug } from "../util/Console.ts";
+import { ConsoleTags } from "../util/globalEnums.ts";
 
 export const handler: Handlers<any | null> = {
-  async GET(req, context) {
-    const { id } = context.params;
-    // const resp = await fetch(`https://api.github.com/users/${username}`);
-    const resp = await fetch(`http://backend:8020/individual/1`);
-    console.log(resp);
-
-    if (resp.status === 404) {
-      return context.render(null);
-    }
-    const user = await resp.json();
-    return context.render(user);
-  },
-
-  async POST(req, context) {
-    const form = await req.formData();
-    const entityName = form.get("name")?.toString();
-
-    const resp = await fetch(`http://localhost:8000/individual/1`, {
-      method: "PATCH",
-      body: JSON.stringify({ entityName }),
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-
-    console.log("tracing entityName: ", resp);
-    // Add email to list.
-
-    // Redirect user to thank you page.
-    const headers = new Headers();
-    headers.set("location", "/");
-    return new Response(null, {
-      status: 303, // See Other
-      headers,
-    });
-  },
+  // async GET(req, context) {},
+  // async POST(req, context) {},
 };
 
 export default function Home(incoming: PageProps) {

@@ -18,6 +18,7 @@
     "lodash": "npm:lodash@4.17.19",
     "#components/": "./components/",
     "#islands/": "./islands/",
+    "#util/": "./util/",
     "#routes/": "./routes/"
   },
   "compilerOptions": {
