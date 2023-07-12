@@ -24,7 +24,7 @@ export const handler: Handlers<any | null> = {
 
     let entityData: any = { status: "BLANK", payload: {} };
     if (id && Number(id) > 0) {
-      const entityResp = await fetch(`${backendApi}/individual/${id}`);
+      const entityResp = await fetch(`${backendApi}/individual?id=${id}`);
       if (entityResp.status === 404) {
         return context.render(null);
       }
