@@ -1,0 +1,51 @@
+import { PageProps } from "$fresh/server.ts";
+import { GlobalFrame } from "../../components/globals/GlobalFrame.tsx";
+
+const googleClientId =
+  "798053362697-rc5atda1dpjbvu1s9rt9oepterlu80tn.apps.googleusercontent.com";
+const googleClientSecret = "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";
+const googleRedirectUrl = "http://localhost:8020/auth/google/register";
+
+const googleAuthUrl = () => {
+  const host = "https://accounts.google.com/o/oauth2/auth";
+  const options = {
+    client_id: googleClientId,
+    redirect_uri: googleRedirectUrl,
+    access_type: "offline",
+    response_type: "code",
+    prompt: "consent",
+    scope: [
+      "https://www.googleapis.com/auth/gmail.send",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" "),
+  };
+  const qs = new URLSearchParams(options);
+  const result = `${host}?${qs.toString()}`;
+  return result;
+};
+
+export default function Index(props: PageProps) {
+  return (
+    <GlobalFrame>
+      <div class="frame-form">
+        <nav class="float-left sticky top-24 w-52 pt-4"></nav>
+
+        <article class="flex flex-col mt-28">
+          <div class="ml-8 font-bold text-lg">Mail setup</div>
+          <div class="flex flex-row mx-4 px-4 py-2">
+            <article class="w-8/12">
+              <button>
+                <a href={googleAuthUrl()}>Login</a>
+              </button>
+            </article>
+
+            <article class="w-4/12">
+              <div class="sticky top-24 w-full px-4 py-2"></div>
+            </article>
+          </div>
+        </article>
+      </div>
+    </GlobalFrame>
+  );
+}

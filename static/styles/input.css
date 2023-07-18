@@ -37,7 +37,7 @@
 
   /* SECTION: describe footer  */
   .global-footer {
-    @apply sticky bottom-0 bg-sky-200;
+    @apply fixed bottom-0 w-full bg-sky-200;
   }
   .foot {
     @apply flex flex-row justify-items-center mx-8 p-1 text-sm text-slate-500;
@@ -112,7 +112,10 @@
     @apply top-0 w-72 text-sm text-slate-400;
   }
   .button-submit {
-    @apply mt-2 px-3 py-1 border rounded-lg w-52 text-white bg-sky-700 hover:text-slate-500 hover:bg-sky-300 hover:transition-all;
+    @apply mt-2 px-3 py-1 border rounded-lg w-52 text-white bg-sky-700 hover:text-slate-500 hover:bg-sky-300 hover:transition-all cursor-pointer;
+  }
+  .button-small {
+    @apply px-1 py-0.5 border rounded-md text-white bg-sky-700 cursor-pointer;
   }
 
   /* SECTION: describe fields */
@@ -121,8 +124,10 @@
   .cell-selected {
     @apply bg-neutral-100;
   }
-
   .cell {
     @apply bg-sky-50;
+  }
+  .list-bulk li {
+    @apply mb-4;
   }
 }
