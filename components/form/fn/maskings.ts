@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { TFnMasking } from "../interfaces/TFn.ts";
 
 /**
@@ -22,9 +23,8 @@ import { TFnMasking } from "../interfaces/TFn.ts";
  * 09 - Pahang, Terengganu, Kelantan
  */
 
-export const MYPhoneMasking: TFnMasking = (field) => {
-  const value = field.data.value;
-
+export const MYPhoneMasking = (value: string) => {
+  if (_.isNil(value)) return value;
   return value.replace(
     /(\d{2})(\d{4})(\d{1,})/,
     (match: string, p1: string, p2: string, p3: string) => {
@@ -45,13 +45,19 @@ export const MYPhoneMasking: TFnMasking = (field) => {
   );
 };
 
-export const MYIdentiyCardMasking: TFnMasking = (field) => {
-  const value = field.data.value;
-
+export const MYIdentiyCardMasking = (value: string) => {
+  if (_.isNil(value)) return value;
   return value.replace(
     /(\d{6})(\d{2})(\d{2})/,
     (match: string, p1: string, p2: string, p3: string) => {
       return `${p1}-${p2}-${p3}`;
     }
   );
+};
+
+export const MYPhoneFieldMasking: TFnMasking = (field) => {
+  return MYPhoneMasking(field.data.value);
+};
+export const MYIdentiyCardFieldMasking: TFnMasking = (field) => {
+  return MYIdentiyCardMasking(field.data.value);
 };

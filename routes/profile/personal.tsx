@@ -2,29 +2,26 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { INavListItem, NavList } from "#components/NavList.tsx";
 import { GlobalFrame } from "#components/globals/GlobalFrame.tsx";
 import Personal from "#islands/forms/Personal.tsx";
-import { backendApi, createUrl } from "#util/globals.ts";
+import { backendApi, backendUrl, webUrl } from "#util/globals.ts";
 import { consoleDebug } from "#util/Console.ts";
 import { ConsoleTags } from "#util/globalEnums.ts";
-
-interface IReturned {
-  status: string;
-  payload: any;
-}
 
 export const handler: Handlers<any | null> = {
   async GET(req, context) {
     const url = new URL(req.url);
     const id = url.searchParams.get("id") || "0";
 
-    const statesResp = await fetch(`${backendApi}/definitions/states`);
+    const statesResp = await fetch(backendUrl("definitions/states"));
     if (statesResp.status === 404) {
       return context.render(null);
     }
     const statesData = await statesResp.json();
 
-    let entityData: any = { status: "BLANK", payload: {} };
-    if (id && Number(id) > 0) {
-      const entityResp = await fetch(`${backendApi}/individual?id=${id}`);
+    let entityData = { status: "BLANK", payload: {} };
+    if (Number(id) > 0) {
+      const entityResp = await fetch(
+        backendUrl("individual", new URLSearchParams({ id }))
+      );
       if (entityResp.status === 404) {
         return context.render(null);
       }
@@ -37,48 +34,32 @@ export const handler: Handlers<any | null> = {
   async POST(req, context) {
     const formData = await req.formData();
     const json = Object.fromEntries(formData);
-    const id = formData.get("entityId");
+    const id = Number(formData.get("id") ?? 0);
     consoleDebug("tracing personal POST, json: ", { json }, [
       ConsoleTags.PERSONAL,
     ]);
 
-    const method = id && Number(id) > 0 ? "PATCH" : "POST";
+    const method = id > 0 ? "PATCH" : "POST";
     const entityResp = await fetch(`${backendApi}/individual`, {
       method,
       body: JSON.stringify(json),
     });
     const entityData = await entityResp.json();
-    const entityId = entityData?.payload?.entityId;
 
     // Redirect to edit page
     const headers = new Headers();
-    headers.set("location", `/personal?id=${entityId}`);
+    const redirectedUrl = webUrl(
+      "profile/personal",
+      new URLSearchParams({
+        id: entityData?.payload?.id ?? 0,
+      })
+    );
+    headers.set("location", redirectedUrl);
     return new Response(null, {
       status: 303,
       headers,
     });
   },
-
-  /*
-  async POST(req, ctx) {
-    const form = await req.formData();
-    const entityName = form.get("name")?.toString();
-
-    const resp = await fetch(`http://backend:8000/individual/1`, {
-      method: "CREATE",
-      body: JSON.stringify({ entityName }),
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-
-    // Add email to list.
-
-  },
-  */
 };
 
 const NoteAtCreation = () => {
@@ -103,23 +84,16 @@ export default function Index(props: PageProps) {
   const id = url.searchParams.get("id");
 
   const navListSidebar1: INavListItem[] = [];
-  const navListSidebar2: INavListItem[] = [];
-
   navListSidebar1.push({
-    href: createUrl("personal/service", url.searchParams),
-    itemText: "New Service",
+    href: webUrl("profile"),
+    itemText: "<< Profile",
   });
 
+  const navListSidebar2: INavListItem[] = [];
   navListSidebar2.push({
-    href: createUrl("personal/service", url.searchParams),
+    href: webUrl("profile/service", url.searchParams),
     itemText: "New Service",
   });
-
-  /*
-    { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
-    */
 
   const { entityData } = props.data;
   const isBlank = entityData.status === "BLANK";
@@ -129,6 +103,8 @@ export default function Index(props: PageProps) {
       <div class="frame-form">
         <nav class="float-left sticky top-24 w-52 pt-4">
           <NavList list={navListSidebar1} listClassName="nav-list-col" />
+          <br />
+          <NavList list={navListSidebar2} listClassName="nav-list-col" />
         </nav>
 
         <article class="flex flex-col mt-28">

@@ -4,9 +4,25 @@
 
 @layer base {
   h1 {
-    @apply text-3xl float-left pt-4;
+    @apply text-3xl float-left pt-4 pb-2;
   }
   h2 {
+  }
+  h3 {
+    @apply text-lg pt-2;
+  }
+
+  table {
+    @apply min-w-full mb-4 text-left text-sm font-light;
+  }
+  thead {
+    @apply border-b border-solid border-black font-medium;
+  }
+  tr th {
+    @apply px-3 py-1;
+  }
+  tr td {
+    @apply border-b border-solid border-gray-300;
   }
 }
 
@@ -100,4 +116,13 @@
   }
 
   /* SECTION: describe fields */
+
+  /* SECTION: describe table */
+  .cell-selected {
+    @apply bg-neutral-100;
+  }
+
+  .cell {
+    @apply bg-sky-50;
+  }
 }

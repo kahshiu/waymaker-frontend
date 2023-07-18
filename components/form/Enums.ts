@@ -21,4 +21,5 @@ export enum EntityType {
 }
 export enum IdType {
   IC_NO = "1",
+  CO_REG_NO = "2",
 }

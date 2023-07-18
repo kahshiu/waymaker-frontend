@@ -14,8 +14,8 @@ import {
   errorPostcode,
 } from "#components/form/fn/errorsSpecial.ts";
 import {
-  MYIdentiyCardMasking,
-  MYPhoneMasking,
+  MYIdentiyCardFieldMasking,
+  MYPhoneFieldMasking,
 } from "#components/form/fn/maskings.ts";
 import {
   withPrecondition,
@@ -65,26 +65,25 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     label: "IC No",
     description: "Malaysian IC No",
     data: form.entityIc ?? "",
-    fnMasking: MYIdentiyCardMasking,
+    fnMasking: MYIdentiyCardFieldMasking,
     errorConditions: errorIC.map(withPrecondition(isMandatory)),
   });
 
   contextAddField(formContext, "mobileNo", {
     label: "Mobile No",
     data: form.mobileNo ?? "",
-    fnMasking: MYPhoneMasking,
+    fnMasking: MYPhoneFieldMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "officeNo", {
     label: "Office No",
     data: form.officeNo ?? "",
-    fnMasking: MYPhoneMasking,
+    fnMasking: MYPhoneFieldMasking,
     errorConditions: errorPhoneNo.map(withPrecondition(isMandatory)),
   });
   contextAddField(formContext, "email", {
     label: "Email",
     data: form.email ?? "",
-    fnMasking: MYPhoneMasking,
     errorConditions: [],
   });
 
@@ -136,7 +135,7 @@ export default function PersonalDetails(props: IBlockForm<any>) {
     <>
       <fieldset class="form-fieldset">
         <legend class="form-legend">
-          Personal Details{" "}
+          Personal Details
           {form?.entityId > 0 && <span>(ID: {form?.entityId})</span>}
         </legend>
 

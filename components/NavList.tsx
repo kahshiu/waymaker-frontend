@@ -4,7 +4,8 @@ export interface INavList {
 }
 
 export interface INavListItem {
-  href: string;
+  href?: string;
+  disabled?: boolean;
   itemText: string;
   itemClassName?: string;
 }
@@ -16,13 +17,23 @@ export const NavList = (props: INavList) => {
   return (
     <ul className={_listClassName}>
       {list.map((item: INavListItem) => {
-        const { href, itemClassName, itemText } = item;
+        const { href, disabled, itemClassName, itemText } = item;
         const _href = href ?? "";
         const _itemClassName = itemClassName ?? "nav-item-blue-200";
         const _itemText = itemText ?? "BLANK";
+        const _itemStyle = {
+          display: "inline-block",
+          width: "100%",
+        };
         return (
           <li className={_itemClassName}>
-            <a href={_href}> {_itemText} </a>
+            {disabled ? (
+              <span class="text-slate-400">{_itemText}</span>
+            ) : (
+              <a style={_itemStyle} href={_href}>
+                {_itemText}
+              </a>
+            )}
           </li>
         );
       })}

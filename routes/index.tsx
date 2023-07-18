@@ -5,6 +5,7 @@ import { GlobalFrame } from "../components/globals/GlobalFrame.tsx";
 import Personal from "../islands/forms/Personal.tsx";
 import { consoleDebug } from "../util/Console.ts";
 import { ConsoleTags } from "../util/globalEnums.ts";
+import { webUrl } from "../util/globals.ts";
 
 export const handler: Handlers<any | null> = {
   // async GET(req, context) {},
@@ -13,10 +14,8 @@ export const handler: Handlers<any | null> = {
 
 export default function Home(incoming: PageProps) {
   const navListSidebar: INavListItem[] = [
-    { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
-    { href: "", itemText: "asdf" },
+    { itemText: "Profile", href: webUrl("profile") },
+    { itemText: "asdf", href: "" },
   ];
   return (
     <GlobalFrame>
@@ -28,25 +27,10 @@ export default function Home(incoming: PageProps) {
         <article class="flex flex-col mt-28">
           <div class="ml-8">breadcrumb</div>
           <div class="flex flex-row mx-4 px-4 py-2">
-            <article class="w-8/12">
-              <Personal />
-            </article>
+            <article class="w-8/12"></article>
 
             <article class="w-4/12">
-              <div class="sticky top-24 w-full px-4 py-2">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                sit amet, consectetur, adipisci velit, sed quia non numquam eius
-                modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut
-                aliquid ex ea commodi consequatur?
-              </div>
+              <div class="sticky top-24 w-full px-4 py-2"></div>
             </article>
           </div>
         </article>
